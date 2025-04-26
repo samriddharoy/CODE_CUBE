@@ -1,10 +1,15 @@
 import React from 'react'
-// TODO: add TCSS
-const InputBox = ({label, id, placeholder, type = "text"}) => {
+
+const InputBox = ({ label, id, placeholder, type = "text" }) => {
   return (
-    <div>
-      <label htmlFor={id}>{label}</label>
-      <input type={type} placeholder={placeholder} id={id} />
+    <div className="flex flex-col">
+      <label htmlFor={id} className="mb-1 text-sm font-medium text-gray-700">{label}</label>
+      <input
+        type={type}
+        id={id}
+        placeholder={placeholder}
+        className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
     </div>
   )
 }
