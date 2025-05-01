@@ -6,3 +6,36 @@
   --color-highlight: #D98C4C;
   --color-vanilla: #D8CAB8;
 }
+.grid {
+  display: flex !important;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.grid div {
+  flex: 1 1 200px;
+  margin-bottom: 10px;
+  background-color: #241410; /* Primary background color */
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); /* Shadow with black color */
+}
+
+.grid div:hover {
+  background-color: #3E2C24; /* Secondary background color for hover effect */
+  transition: background-color 0.3s ease-in-out;
+}
+
+/* If you want text to stand out */
+.grid div h3, .grid div p {
+  color: #D8CAB8; /* Vanilla text color for readability */
+}
+
+.grid div p {
+  color: #D98C4C; /* Highlight color for specific text */
+}
+
+.grid div img {
+  border: 2px solid #D98C4C; /* Highlight color for borders */
+  border-radius: 5px;
+}
