@@ -4,6 +4,7 @@ import Signup from "./pages/Signup"
 import Signin from "./pages/Signin"
 import ProjectMenu from "./pages/ProjectMenu";
 import Editor from "./Pages/Editor"; // Ensure path & casing is correct
+import ListCard from "./components/ListCard";
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
       <Route path="/Editor" element={<Editor />} /> {/* Fixed: removed :projectid */}
       <Route path="/signup" element={<Signup />}></Route>
       <Route path="/signin" element={<Signin />}></Route>
+      <Route path="/ListCards" element={<ListCard />} /> {/* Added route for ListCards */}
     </Routes>
   </BrowserRouter>
   )
