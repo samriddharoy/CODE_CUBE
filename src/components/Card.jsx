@@ -1,11 +1,25 @@
-import React from 'react'
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import Card from './Card'; // Import the Card component
 
-const Card = ({children}) => {
+function ProjectCard({ projectName }) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    // Navigate to the editor page with the project name
+    navigate(`/editor/${projectName}`);
+  };
+
   return (
-    <div className="flex flex-col space-y-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 rounded-2xl bg-primary/60 backdrop-blur-md shadow-lg border border-vanilla/40 p-6">
-      {children}
-    </div>
-  )
+    <Card>
+      <div
+        className="cursor-pointer hover:bg-[#D98C4C]/80 p-4 rounded-lg transition duration-300"
+        onClick={handleClick}
+      >
+        <h3 className="text-xl font-bold text-white">{projectName}</h3>
+      </div>
+    </Card>
+  );
 }
 
-export default Card
+export default ProjectCard;
