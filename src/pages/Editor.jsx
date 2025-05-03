@@ -1,41 +1,22 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom'; // Import useParams
 import EditorNavbar from '../components/EditorNavbar';
 import MonacoEditor from '@monaco-editor/react';
 import { MdLightMode } from "react-icons/md";
 import { FaExpandAlt } from "react-icons/fa";
 
 function Editor() {
+  const { projectName } = useParams(); // Get project name from the URL
+
   const [istab, setIsTab] = useState("html");
   const [isLightMode, setIsLightMode] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
+  // Default code (you can later load the project data from an API or DB)
   const defaultCode = {
-    html: `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Preview</title>
-</head>
-<body>
-  <h1>Hello, World!</h1>
-  <p>This is a basic HTML page.</p>
-</body>
-</html>`,
-    css: `body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  color: #333;
-}
-
-h1 {
-  color: #D98C4C;
-}`,
-    javascript: `console.log('Hello from JavaScript!');
-function greet() {
-  alert('Welcome to the editor!');
-}
-greet();`
+    html: `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${projectName}</title></head><body><h1>${projectName}</h1></body></html>`,
+    css: `body {font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333;}`,
+    javascript: `console.log('Editing: ${projectName}');`
   };
 
   const [htmlContent, setHtmlContent] = useState(defaultCode.html);
@@ -95,7 +76,7 @@ greet();`
   return (
     <div>
       <EditorNavbar />
-      <div className="flex">
+      <div className="flex h-screen">
         {/* Left Editor Panel */}
         <div className={`${isExpanded ? "w-full" : "w-[50%]"} bg-black text-white`}>
           {/* Tabs and Icons */}

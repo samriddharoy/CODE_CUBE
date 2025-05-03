@@ -12,13 +12,9 @@ function Navbar() {
         </span>
       </div>
 
-      {/* Navigation Links */}
+      {/* Navigation Links (Removed unnecessary links) */}
       <div className="flex gap-6 text-sm font-medium">
-        <Link to="/" className="hover:text-highlight transition duration-150">Home</Link>
-        <Link to="/about" className="hover:text-highlight transition duration-150">About</Link>
-        <Link to="/services" className="hover:text-highlight transition duration-150">Services</Link>
-        <Link to="/contact" className="hover:text-highlight transition duration-150">Contact</Link>
-        
+        {/* You can add other relevant links here if needed */}
       </div>
 
       {/* Download Icon */}

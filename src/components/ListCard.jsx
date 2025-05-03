@@ -3,7 +3,7 @@ import code1 from "../Image/code1.png";
 import deleteIcon from "../Image/delete.jpg";
 import Button from "./Button";
 
-function ListCard() {
+function ListCard({ title, onDelete }) {
   const [isDeletemodelshow, setisDeletemodelshow] = useState(false);
 
   return (
@@ -16,7 +16,7 @@ function ListCard() {
             alt="code"
           />
           <div>
-            <h2 className="text-[20px] text-[#D8CAB8]">My First Project</h2>
+            <h2 className="text-[20px] text-[#D8CAB8]">{title}</h2>
             <p className="text-[14px] text-[#D98C4C]">Created in 9 Mon 2023</p>
           </div>
         </div>
@@ -36,7 +36,13 @@ function ListCard() {
               this project?
             </h3>
             <div className="flex items-center gap-[10px] mt-[20px]">
-              <Button text="Delete" />
+              <Button 
+                text="Delete" 
+                onClick={() => { 
+                  onDelete();
+                  setisDeletemodelshow(false); 
+                }} 
+              />
               <Button text="Cancel" onClick={() => setisDeletemodelshow(false)} />
             </div>
           </div>
