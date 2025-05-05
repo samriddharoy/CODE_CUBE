@@ -1,51 +1,71 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom'; // Import useParams
+import { useParams } from 'react-router-dom';
 import EditorNavbar from '../components/EditorNavbar';
 import MonacoEditor from '@monaco-editor/react';
-import { MdLightMode } from "react-icons/md";
-import { FaExpandAlt } from "react-icons/fa";
+import { MdLightMode } from 'react-icons/md';
+import { FaExpandAlt } from 'react-icons/fa';
 
 function Editor() {
-  const { projectName } = useParams(); // Get project name from the URL
+  const { projectName } = useParams();
 
-  const [istab, setIsTab] = useState("html");
+  const [istab, setIsTab] = useState('html');
   const [isLightMode, setIsLightMode] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Default code (you can later load the project data from an API or DB)
   const defaultCode = {
     html: `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${projectName}</title></head><body><h1>${projectName}</h1></body></html>`,
-    css: `body {font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333;}`,
-    javascript: `console.log('Editing: ${projectName}');`
+    css: `body { font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; }`,
+    javascript: `console.log('Editing: ${projectName}');`,
   };
 
-  const [htmlContent, setHtmlContent] = useState(defaultCode.html);
-  const [cssContent, setCssContent] = useState(defaultCode.css);
-  const [jsContent, setJsContent] = useState(defaultCode.javascript);
-  const [editorContent, setEditorContent] = useState(defaultCode.html);
+  const [htmlContent, setHtmlContent] = useState(() =>
+    localStorage.getItem(`${projectName}-html`) || defaultCode.html
+  );
+  const [cssContent, setCssContent] = useState(() =>
+    localStorage.getItem(`${projectName}-css`) || defaultCode.css
+  );
+  const [jsContent, setJsContent] = useState(() =>
+    localStorage.getItem(`${projectName}-js`) || defaultCode.javascript
+  );
+
+  const [editorContent, setEditorContent] = useState(() => {
+    if (istab === 'html') return htmlContent;
+    if (istab === 'css') return cssContent;
+    if (istab === 'javascript') return jsContent;
+    return '';
+  });
 
   const changeTheme = () => {
     setIsLightMode(!isLightMode);
-    document.body.style.backgroundColor = !isLightMode ? "#fff" : "#000";
-    document.body.style.color = !isLightMode ? "#000" : "#fff";
+    document.body.style.backgroundColor = !isLightMode ? '#fff' : '#000';
+    document.body.style.color = !isLightMode ? '#000' : '#fff';
   };
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
   };
 
-  const handleEditorChange = (value = "") => {
+  const handleEditorChange = (value = '') => {
     setEditorContent(value);
-    if (istab === "html") setHtmlContent(value);
-    if (istab === "css") setCssContent(value);
-    if (istab === "javascript") setJsContent(value);
+
+    if (istab === 'html') {
+      setHtmlContent(value);
+      localStorage.setItem(`${projectName}-html`, value);
+    }
+    if (istab === 'css') {
+      setCssContent(value);
+      localStorage.setItem(`${projectName}-css`, value);
+    }
+    if (istab === 'javascript') {
+      setJsContent(value);
+      localStorage.setItem(`${projectName}-js`, value);
+    }
   };
 
   const updateIframe = () => {
-    const iframe = document.getElementById("output");
+    const iframe = document.getElementById('output');
     if (!iframe) return;
 
-    const doc = iframe.contentWindow.document;
     const fullHtml = `
       <!DOCTYPE html>
       <html lang="en">
@@ -58,44 +78,59 @@ function Editor() {
       </body>
       </html>
     `;
+
+    const doc = iframe.contentWindow.document;
     doc.open();
     doc.write(fullHtml);
     doc.close();
   };
 
   useEffect(() => {
-    updateIframe();
-  }, [htmlContent, cssContent, jsContent]);
-
-  useEffect(() => {
-    if (istab === "html") setEditorContent(htmlContent);
-    if (istab === "css") setEditorContent(cssContent);
-    if (istab === "javascript") setEditorContent(jsContent);
+    if (istab === 'html') setEditorContent(htmlContent);
+    if (istab === 'css') setEditorContent(cssContent);
+    if (istab === 'javascript') setEditorContent(jsContent);
   }, [istab]);
 
   return (
     <div>
       <EditorNavbar />
       <div className="flex h-screen">
-        {/* Left Editor Panel */}
-        <div className={`${isExpanded ? "w-full" : "w-[50%]"} bg-black text-white`}>
-          {/* Tabs and Icons */}
+        {/* Editor Panel */}
+        <div className={`${isExpanded ? 'w-full' : 'w-[50%]'} bg-black text-white`}>
+          {/* Top Controls */}
           <div className="flex items-center justify-between w-full bg-[#1A1919] h-[50px] px-[40px]">
+            {/* Language Tabs */}
             <div className="flex items-center gap-2">
-              <div onClick={() => setIsTab("html")} className={`tab text-white cursor-pointer px-2 py-1 ${istab === "html" ? "bg-[#D98C4C]" : ""}`}>HTML</div>
-              <div onClick={() => setIsTab("css")} className={`tab text-white cursor-pointer px-2 py-1 ${istab === "css" ? "bg-[#D98C4C]" : ""}`}>CSS</div>
-              <div onClick={() => setIsTab("javascript")} className={`tab text-white cursor-pointer px-2 py-1 ${istab === "javascript" ? "bg-[#D98C4C]" : ""}`}>JavaScript</div>
+              {['html', 'css', 'javascript'].map((tab) => (
+                <div
+                  key={tab}
+                  onClick={() => setIsTab(tab)}
+                  className={`tab text-white cursor-pointer px-2 py-1 rounded ${
+                    istab === tab ? 'bg-[#D98C4C]' : ''
+                  }`}
+                >
+                  {tab.toUpperCase()}
+                </div>
+              ))}
             </div>
-            <div className="flex items-center gap-2">
-              <MdLightMode className="cursor-pointer" onClick={changeTheme} />
-              <FaExpandAlt className="cursor-pointer" onClick={toggleExpand} />
+
+            {/* Run & Tools */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={updateIframe}
+                className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm"
+              >
+                Run
+              </button>
+              <MdLightMode className="cursor-pointer text-xl" onClick={changeTheme} />
+              <FaExpandAlt className="cursor-pointer text-xl" onClick={toggleExpand} />
             </div>
           </div>
 
           {/* Monaco Editor */}
           <MonacoEditor
             height="86vh"
-            theme={isLightMode ? "vs-light" : "vs-dark"}
+            theme={isLightMode ? 'vs-light' : 'vs-dark'}
             language={istab}
             value={editorContent}
             onChange={handleEditorChange}
@@ -106,7 +141,7 @@ function Editor() {
           />
         </div>
 
-        {/* Right Preview Panel */}
+        {/* Output Panel */}
         {!isExpanded && (
           <iframe
             id="output"
